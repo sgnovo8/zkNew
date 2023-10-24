@@ -1,4 +1,13 @@
 {
   "version": 1,
-  "deployAliases": {}
+  "deployAliases": {
+    "zknew": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/zknew.json",
+      "feepayerKeyPath": "/home/snovosel/.cache/zkapp-cli/keys/zknew.json",
+      "feepayerAlias": "zknew",
+      "fee": ".1",
+      "smartContract": "Add"
+    }
+  }
 }
