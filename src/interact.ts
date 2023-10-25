@@ -56,6 +56,7 @@ let zkAppKey = PrivateKey.fromBase58(zkAppKeysBase58.privateKey);
 const Network = Mina.Network(config.url);
 const fee = Number(config.fee) * 1e9; // in nanomina (1 billion = 1.0 mina)
 Mina.setActiveInstance(Network);
+
 let feepayerAddress = feepayerKey.toPublicKey();
 let zkAppAddress = zkAppKey.toPublicKey();
 let zkApp = new Add(zkAppAddress);
@@ -63,6 +64,9 @@ let zkApp = new Add(zkAppAddress);
 let sentTx;
 // compile the contract to create prover keys
 console.log('compile the contract...');
+
+
+  //wait for the compilation of the Add sk to complete before continuing execution
 await Add.compile();
 try {
   // call update() and send transaction
@@ -70,8 +74,12 @@ try {
   let tx = await Mina.transaction({ sender: feepayerAddress, fee }, () => {
     zkApp.update();
   });
+
+  //wait for the proof of a transaction to be generated before continuing execution
   await tx.prove();
   console.log('send transaction...');
+
+  //wait for the signing of a transaction to occur before continuing execution
   sentTx = await tx.sign([feepayerKey]).send();
 } catch (err) {
   console.log(err);
