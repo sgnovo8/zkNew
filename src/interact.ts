@@ -62,7 +62,8 @@ let zkAppAddress = zkAppKey.toPublicKey();
 let zkApp = new Add(zkAppAddress);
 
 let sentTx;
-// compile the contract to create prover keys
+// compile the contract to create prover keys; 
+// because it can take some time, let's add a hint about that so that we know what's going on
 console.log('compile the contract...');
 
 
@@ -70,16 +71,20 @@ console.log('compile the contract...');
 await Add.compile();
 try {
   // call update() and send transaction
+  // add a hint bc it cld take time
   console.log('build transaction and create proof...');
+
+  //wait for the tx to hit Mina b4 continuing
   let tx = await Mina.transaction({ sender: feepayerAddress, fee }, () => {
     zkApp.update();
   });
 
   //wait for the proof of a transaction to be generated before continuing execution
   await tx.prove();
+  //another hint due to time it takes
   console.log('send transaction...');
 
-  //wait for the signing of a transaction to occur before continuing execution
+  //wait for the signing and sending of a transaction to network before continuing execution
   sentTx = await tx.sign([feepayerKey]).send();
 } catch (err) {
   console.log(err);
